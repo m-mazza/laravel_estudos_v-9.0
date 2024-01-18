@@ -1,6 +1,6 @@
 <h3>Informações de clientes</h3>
 <hr>
-<p>ID: {{$cliente['id']}}</p>
-<p>Nome: {{$cliente['nome']}}</p>
+<p><strong>ID:</strong> {{$cliente['id']}}</p>
+<p><strong>Nome:</strong> {{$cliente['nome']}}</p>
 <br>
 <a href="{{route('clientes.index')}}">voltar</a>
