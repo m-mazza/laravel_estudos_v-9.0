@@ -14,6 +14,13 @@ class ClienteController extends Controller
         ['id'=>4, 'nome'=>'Luciana Hoffman']
     ];
 
+    public function __construct() {
+        $clientes = session('clientes');
+        if(!isset($clientes)){
+            session(['clientes' => $this->clientes]);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +28,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = $this->clientes;
+       $clientes = session('clientes');
        return view('clientes.index', compact(['clientes']));
     }
 
@@ -32,7 +39,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        //
+        return view('clientes.create');
     }
 
     /**
@@ -43,7 +50,16 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $clientes = session('clientes');
+        $id = end($clientes)['id']+1;
+
+        $nome = $request->nome;
+        $dados = ["id"=>$id, "nome"=>$nome];
+        $clientes[] = $dados;
+
+        session(['clientes' => $clientes]);
+        return redirect()->route('clientes.index');
+
     }
 
     /**
@@ -54,7 +70,10 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        //
+        $clientes = session('clientes');
+        $index = $this->getIndex($id, $clientes);
+        $cliente = $clientes[$index];
+        return view('clientes.info', compact(['cliente']) );
     }
 
     /**
@@ -65,7 +84,10 @@ class ClienteController extends Controller
      */
     public function edit($id)
     {
-        //
+        $clientes = session('clientes');
+        $index = $this->getIndex($id, $clientes);
+        $cliente = $clientes[$index];
+        return view('clientes.edit', compact(['cliente']) );
     }
 
     /**
@@ -77,7 +99,11 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $clientes = session('clientes');
+        $index = $this->getIndex($id, $clientes);
+        $clientes[$index]['nome'] = $request->nome;
+        session(['clientes' => $clientes]);
+        return redirect()->route('clientes.index');
     }
 
     /**
@@ -88,6 +114,16 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $clientes = session('clientes');
+        $index = $this->getIndex($id, $clientes);
+        array_splice($clientes, $index, 1);
+        session(['clientes' => $clientes]);
+        return redirect()->route('clientes.index');
+    }
+
+    private function getIndex($id, $clientes) {
+        $ids = array_column($clientes, 'id');
+        $index = array_search($id, $ids);
+        return $index;
     }
 }
