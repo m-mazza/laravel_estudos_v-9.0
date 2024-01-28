@@ -28,8 +28,32 @@ class ClienteController extends Controller
      */
     public function index()
     {
-       $clientes = session('clientes');
-       return view('clientes.index', compact(['clientes']));
+
+        //    1º forma de passar variáveis para as views: encadeamento da fução with()
+        //    $clientes = session('clientes');
+        //    $titulo = 'Todos os clientes';
+        //    return view('clientes.index')
+        //         ->with('clientes', $clientes)
+        //         ->with('titulo', $titulo);
+
+        /*
+            a função with() seve para passar variáveis para às views.
+            essa função recebe dois parâmetros, o primeiro é o nome da variável 'clientes',
+            depois o valor da variável '$clientes'.
+            a função with() pode ser encadeada.
+        */
+
+
+        // 2º forma de passar variáveis para as views: array associativo
+        $clientes = session('clientes');
+        $titulo = 'Todos os clientes';
+        return view('clientes.index',
+            ['clientes'=>$clientes, 'titulo'=>$titulo]
+        );
+
+        // a forma abaixo é equivalente à 2ª forma
+        // return view('clientes.index', compact(['clientes', 'titulo']));
+
     }
 
     /**
@@ -51,7 +75,12 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $clientes = session('clientes');
-        $id = end($clientes)['id']+1;
+
+        if(!$clientes){
+            $id = 1;
+        } else {
+            $id = end($clientes)['id'] + 1;
+        }
 
         $nome = $request->nome;
         $dados = ["id"=>$id, "nome"=>$nome];

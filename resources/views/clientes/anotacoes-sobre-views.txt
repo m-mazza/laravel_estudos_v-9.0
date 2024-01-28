@@ -1,0 +1,3 @@
+Aula - 31 (passagem de parâmetros)
+    Todas as views que estiverem dentro de pastas (ex: pasta clientes),
+    elas devem ser referenciadas como 'nom-da-pasta'.'nome-da-view'  ->  clientes.create / clientes.edit / clientes.info /clientes.index
